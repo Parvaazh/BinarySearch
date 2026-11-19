@@ -1,37 +1,32 @@
 class Solution {
     public int shipWithinDays(int[] weights, int days) {
-        int maxWeight = 0;
-        int totalWeight = 0;
-
-        for (int w : weights) {
-            maxWeight = Math.max(maxWeight, w);
-            totalWeight += w;
+        int maxWeight=0;int totalWeight=0;
+        for(int w:weights){
+            maxWeight=Math.max(w,maxWeight);
+            totalWeight+=w;
         }
-
-        // Start at whichever is larger: the heaviest single box, or (totalWeight / days)
-        int capacity = Math.max(maxWeight, totalWeight / days);
-
-        // Keep testing capacities, increasing by 1 until all boxes fit within 'days'
-        while (true) {
-            int daysUsed = 1;
-            int currentLoad = 0;
-
-            for (int w : weights) {
-                if (currentLoad + w > capacity) {
-                    daysUsed++;       
-                    currentLoad = w;    
-                } else {
-                    currentLoad += w;   
+        int left=Math.max(maxWeight,totalWeight/days);
+        int right=totalWeight;
+        
+        while(left<=right){
+            int currentLoad=0;
+            int usedDays=1;
+            int mid=left+(right-left)/2;
+            for(int w:weights){
+                if(currentLoad+w>mid){
+                    usedDays++;
+                    currentLoad=w;
+                }else{
+                    currentLoad+=w;
                 }
             }
-
-
-            if (daysUsed <= days) {
-                return capacity;
+            if(usedDays<=days){
+                right=mid-1;
+            }else{
+              left=mid+1;
             }
 
-
-            capacity++;
         }
+        return left;
     }
 }
